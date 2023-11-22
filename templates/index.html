@@ -6,17 +6,24 @@
     <title>{{ name }}'s Watchlist</title>
 </head>
 <body>
-    <h2>{{ name }}'s Watchlist</h2>
+    <h2>
+        <img alt="avatar" class="avatar" src="{{url_for('static',filename='images/avatar.bmp')}}">
+        {{ name }}'s Watchlist
+    </h2>
     <p>{{movies|length}} movies</p>
-    <ul>
+    <ul class="movie-list">
         {%for movie in movies%}
         <li>
             {{movie.title}} - {{movie.year}}
         </li>
         {%endfor%}
     </ul>
+    <img alt="running" class="running" src="{{url_for('static',filename='images/running.gif')}}">
     <footer>
-        <small>&copy; 2018 <a href="http://helloflask.com/book/3">HelloFlask</a></small>
+        <small>&copy; 2023 <a href="https://dawnrisingdong.github.io/">dawn_r1sing</a></small>
     </footer>
 </body>
+<link rel="icon" href="{{url_for('static',filename='favicon.png')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='style.css')}}" type="text/css">
+</head>
 </html>
