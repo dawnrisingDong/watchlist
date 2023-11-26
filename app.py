@@ -24,7 +24,8 @@ class Movie(db.Model):
     title = db.Column(db.String(60))    #标题
     year = db.Column(db.String(4))      #年份
 
-@app.cli.command()  #注册为命令，可以传入name参数来自定义命令
+#注册为命令
+@app.cli.command()  
 @click.option('--drop',is_flag=True,help='Create after drop.')  #设置选项
 def initdb(drop):       #默认函数名就是命令的名字
     """Initialize the database."""
@@ -33,12 +34,22 @@ def initdb(drop):       #默认函数名就是命令的名字
     db.create_all()
     click.echo('Initialize the database.')  #输出提示信息
 
+#模板上下文处理函数
+@app.context_processor
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
 
+#错误处理函数
+@app.errorhandler(404)
+def page_not_found(e):  #接受异常对象作为参数
+    return render_template('404.html'),404  #返回模板和状态码（其他渲染默认状态码为200）
+
+#主页视图函数
 @app.route('/')
 def index():
-    user = User.query.first()   #读取用户记录
     movies = Movie.query.all()  #读取所有电影
-    return render_template('index.html',user=user ,movies=movies)
+    return render_template('index.html' ,movies=movies)
 
 @app.cli.command()
 def forge():

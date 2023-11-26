@@ -1,29 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.name }}'s Watchlist</title>
-</head>
-<body>
-    <h2>
-        <img alt="avatar" class="avatar" src="{{url_for('static',filename='images/avatar.bmp')}}">
-        {{ user.name }}'s Watchlist
-    </h2>
+{% extends 'base.html' %}
+{% block content %}
     <p>{{movies|length}} movies</p>
     <ul class="movie-list">
         {%for movie in movies%}
         <li>
             {{movie.title}} - {{movie.year}}
+            <span class="float-right">
+                <a class="imdb" href="https://www.imdb.com/find?q={{ movie.title }}" target="_blank" title="Find this movie on IMDb">IMDb</a>
+            </span>
         </li>
         {%endfor%}
     </ul>
     <img alt="running" class="running" src="{{url_for('static',filename='images/running.gif')}}">
-    <footer>
-        <small>&copy; 2023 <a href="https://dawnrisingdong.github.io/">dawn_r1sing</a></small>
-    </footer>
-</body>
-<link rel="icon" href="{{url_for('static',filename='favicon.png')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='style.css')}}" type="text/css">
-</head>
-</html>
+{% endblock %}
