@@ -17,10 +17,16 @@
     <nav>
         <ul>
             <li><a href="{{url_for('index')}}">Home</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{url_for('settings')}}">Settings</a></li>
+            <li><a href="{{url_for('logout')}}">Logout</a></li>
+            {% else %}
+            <li><a href="{{url_for('login')}}">Login</a></li>
+            {% endif %}
         </ul>
     </nav>
-    {% block content %}{% endblock %}
 
+    {% block content %}{% endblock %}
     <footer>
         <small>&copy; 2023 <a href="https://dawnrisingdong.github.io/">dawn_r1sing</a></small>
     </footer>

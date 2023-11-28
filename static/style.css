@@ -118,3 +118,7 @@ input[name=year]{
 .inline-form{
     display: inline;
 }
+
+.message{
+    font-weight: 900;
+}
