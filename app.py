@@ -1,5 +1,7 @@
 import os
 import click
+import os.path
+import sys
 
 from flask import Flask,render_template
 from flask import request,url_for,flash,redirect
@@ -7,10 +9,21 @@ from flask_sqlalchemy import SQLAlchemy #导入扩展类
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from flask_login import login_user,login_required,logout_user,current_user
+from flask_login import LoginManager
+
+WIN = sys.platform.startswith('win')
+if WIN:
+    prefix = 'sqlite:///'
+else:
+    prefix = 'sqlite:////'
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///'+os.path.join(app.root_path,'data.db')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(BASE_DIR,'data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False    #关闭对模型修改的监控
+
+
+
 #在扩展类实例化之前加载配置
 db = SQLAlchemy(app)    #初始化扩展，传入程序实例app
 
@@ -61,15 +74,13 @@ def admin(username,password):
     db.session.commit()
     click.echo('Done.')
 
-#用户加载回调函数？
-from flask_login import LoginManager
-
+#用户加载回调函数
 login_manager = LoginManager(app)   #实例化扩展
+login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
     user = User.query.get(int(user_id))
-    login_manager.login_view = 'login'
     return user
 
 #登录
@@ -93,7 +104,6 @@ def login():
         flash('Invalid username or password!')
         return redirect(url_for('login'))
         
-    
     return render_template('login.html')
 
 
@@ -227,14 +237,14 @@ def settings():
 
         if not name or len(name) > 20:
             flash('Invalid input!')
-            return redirect(url_for('index'))
+            return redirect(url_for('settings'))
         
         current_user.name = name    #返回当前登录用户的数据库记录对象
         db.session.commit()
         flash('Setting updated!')
         return redirect(url_for('index'))
 
-    
+
     return render_template('settings.html')
 
 
