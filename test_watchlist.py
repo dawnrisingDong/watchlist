@@ -1,10 +1,9 @@
 import unittest
-import os
 
-from app import app,db,Movie,User
-from app import forge,initdb
-from flask import Flask 
-from flask_sqlalchemy import SQLAlchemy
+from watchlist import app,db
+from watchlist.models import Movie,User
+from watchlist.commands import forge,initdb
+
 
 ctx = app.app_context()
 ctx.push()
@@ -206,17 +205,6 @@ class WatchlistTestCase(unittest.TestCase):     # 测试用例
         self.assertNotIn('Edit',data)
         self.assertNotIn('<form method="post">',data)
 
-# 测试登录保护
-    def test_login_protect(self):
-
-        response = self.client.get('/')
-        
-        data = response.get_data(as_text=True)
-        self.assertNotIn('Logout',data)
-        self.assertNotIn('Settings',data)
-        self.assertNotIn('<form method="post">',data)
-        self.assertNotIn('Delete',data)
-        self.assertNotIn('Edit',data)
 
     # 测试设置
     def test_settings(self):
